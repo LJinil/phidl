@@ -1,0 +1,20 @@
+name: Sync Fork with Upstream
+
+on:
+  schedule:
+    - cron: "0 0 1 * *"     # 매월 1일 00:00 UTC 실행 (KST 09:00)
+  workflow_dispatch:        # 필요 시 수동 실행
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Sync with upstream
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4.1
+        with:
+          upstream_repository: "amccaugh/phidl"   # 원본 PHIDL
+          target_repository: "LJinil/phidl"        # 진일 포크
+          upstream_branch: "master"                # 원본 master
+          target_branch: "master"                  # 진일 master
+          git_pull_args: "--ff-only"
