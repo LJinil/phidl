@@ -1,0 +1,31 @@
+name: Sync PHIDL Upstream
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'   # 매달 1일 00:00 UTC (한국시간 09:00쯤)
+  workflow_dispatch:        # 필요하면 웹에서 수동 실행도 가능하게
+
+jobs:
+  sync_with_upstream:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          ref: master                 # 진일 레포 기본 브랜치
+          persist-credentials: true
+
+      - name: Sync from upstream
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4.1
+        with:
+          # 원본 PHIDL 레포 (amccaugh/phidl)
+          upstream_sync_repo: amccaugh/phidl
+          upstream_sync_branch: master
+
+          # 내 포크 레포 쪽 설정
+          target_sync_branch: master
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+          # false로 해야 실제로 머지됨 (true면 리허설만)
+          test_mode: false
